@@ -1,0 +1,148 @@
+npm install @react-navigation/native
+npm install react-native-screens react-native-safe-area-context
+
+npm install @react-navigation/stack
+
+import 'react-native-gesture-handler';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+
+const Stack = createStackNavigator();
+
+// Datos de ejemplo para los trabajos
+const jobsData = [
+  { id: '1', title: 'Diseñador Gráfico', location: 'Remoto', schedule: 'Tiempo completo' },
+  { id: '2', title: 'Desarrollador Web', location: 'Nueva York', schedule: 'Tiempo completo' },
+  { id: '3', title: 'Asistente Administrativo', location: 'Oficina', schedule: 'Medio tiempo' },
+  { id: '4', title: 'Gerente de Proyectos', location: 'Remoto', schedule: 'Tiempo completo' },
+];
+
+// ------------------- Componente de Menú -------------------
+const MenuComponent = ({ navigation }) => {
+  return (
+    <View style={styles.menuContainer}>
+      <TouchableOpacity
+        style={styles.menuItem}
+        onPress={() => navigation.navigate('Trabajos')}
+      >
+        <Text style={styles.menuText}>Ver Trabajos</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.menuItem}
+        onPress={() => alert('¡Próximamente más opciones!')}
+      >
+        <Text style={styles.menuText}>Contacto</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+// ------------------- Pantalla de Inicio -------------------
+const HomeScreen = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>¡Bienvenido a la Bolsa de Empleo!</Text>
+      <Text style={styles.subtitle}>Encuentra tu próximo trabajo aquí.</Text>
+      <MenuComponent navigation={navigation} />
+    </View>
+  );
+};
+
+// ------------------- Pantalla de Trabajos -------------------
+const JobsScreen = () => {
+  return (
+    <ScrollView style={styles.jobsContainer}>
+      {jobsData.map(job => (
+        <View key={job.id} style={styles.jobCard}>
+          <Text style={styles.jobTitle}>{job.title}</Text>
+          <Text style={styles.jobDetail}>📍 {job.location}</Text>
+          <Text style={styles.jobDetail}>⏰ {job.schedule}</Text>
+        </View>
+      ))}
+    </ScrollView>
+  );
+};
+
+// ------------------- Estilos de la aplicación -------------------
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f0f2f5',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+  },
+  subtitle: {
+    fontSize: 18,
+    color: '#666',
+    marginBottom: 30,
+  },
+  menuContainer: {
+    width: '80%',
+  },
+  menuItem: {
+    backgroundColor: '#007bff',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  menuText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  jobsContainer: {
+    padding: 10,
+    backgroundColor: '#f0f2f5',
+  },
+  jobCard: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  jobTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#007bff',
+    marginBottom: 5,
+  },
+  jobDetail: {
+    fontSize: 16,
+    color: '#555',
+    marginTop: 3,
+  },
+});
+
+// ------------------- Configuración de la Navegación -------------------
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Inicio">
+        <Stack.Screen
+          name="Inicio"
+          component={HomeScreen}
+          options={{ title: 'Bolsa de Empleo' }}
+        />
+        <Stack.Screen
+          name="Trabajos"
+          component={JobsScreen}
+          options={{ title: 'Empleos Disponibles' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
